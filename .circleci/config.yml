@@ -13,7 +13,7 @@ version: 2
         name: Install Rust
         command: |
           apt update
-          apt install -y curl
+          apt install -y curl clang-6.0
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - run:
         <<: *cargo
@@ -24,7 +24,7 @@ version: 2
     - run:
         name: Install Rust
         command: |
-          yum install -y curl
+          yum install -y curl clang clang-devel
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - run:
         <<: *cargo
@@ -134,24 +134,24 @@ workflows:
       - latest
       - 9.2-devel-ubuntu18.04
       - 10.0-devel-ubuntu16.04
-      - 9.2-devel-ubuntu16.04
-      - 9.1-devel-ubuntu16.04
-      - 9.0-devel-ubuntu16.04
-      - 8.0-devel-ubuntu16.04
-      - 8.0-devel-ubuntu14.04
-      - 7.5-devel-ubuntu14.04
-      - 7.0-devel-ubuntu14.04
-      - 6.5-devel-ubuntu14.04
+      # - 9.2-devel-ubuntu16.04
+      # - 9.1-devel-ubuntu16.04
+      # - 9.0-devel-ubuntu16.04
+      # - 8.0-devel-ubuntu16.04
+      # - 8.0-devel-ubuntu14.04
+      # - 7.5-devel-ubuntu14.04
+      # - 7.0-devel-ubuntu14.04
+      # - 6.5-devel-ubuntu14.04
       - 10.0-devel-centos7
-      - 9.2-devel-centos7
-      - 9.1-devel-centos7
-      - 9.0-devel-centos7
-      - 8.0-devel-centos7
-      - 7.5-devel-centos7
-      - 7.0-devel-centos7
+      # - 9.2-devel-centos7
+      # - 9.1-devel-centos7
+      # - 9.0-devel-centos7
+      # - 8.0-devel-centos7
+      # - 7.5-devel-centos7
+      # - 7.0-devel-centos7
       - 10.0-devel-centos6
-      - 9.2-devel-centos6
-      - 9.1-devel-centos6
-      - 9.0-devel-centos6
-      - 8.0-devel-centos6
-      - 7.5-devel-centos6
+      # - 9.2-devel-centos6
+      # - 9.1-devel-centos6
+      # - 9.0-devel-centos6
+      # - 8.0-devel-centos6
+      # - 7.5-devel-centos6
