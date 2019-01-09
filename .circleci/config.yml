@@ -13,6 +13,18 @@ aliases:
       command: |
         export PATH=/root/.cargo/bin:$PATH
         cargo build -vv
+  - &cargo_test
+    run:
+      name: Cargo test
+      command: |
+        export PATH=/root/.cargo/bin:$PATH
+        cargo test -v
+  - &cargo_fmt
+    run:
+      name: Cargo fmt
+      command: |
+        export PATH=/root/.cargo/bin:$PATH
+        cargo fmt -v
 
 .job_apt_template: &job_apt
   steps:
@@ -26,6 +38,8 @@ aliases:
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - *cargo_components
     - *cargo_build
+    - *cargo_test
+    - *cargo_fmt
 
 .job_yum_template: &job_yum
   steps:
@@ -34,10 +48,12 @@ aliases:
         name: Install Rust
         command: |
           yum install -y curl
-          yum install clang clang-devel libc++ libc++-devel lld lldb lldb-devel llvm llvm-devel  
+          yum install clang clang-devel  
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - *cargo_components
     - *cargo_build
+    - *cargo_test
+    - *cargo_fmt
 
 jobs:
   latest:
@@ -112,30 +128,6 @@ jobs:
     <<: *job_yum
     docker:
       - image: nvidia/cuda:7.0-devel-centos7
-  10.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:10.0-devel-centos6
-  9.2-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.2-devel-centos6
-  9.1-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.1-devel-centos6
-  9.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.0-devel-centos6
-  8.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:8.0-devel-centos6
-  7.5-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:7.5-devel-centos6
 
 workflows:
   version: 2
@@ -159,9 +151,3 @@ workflows:
       # - 8.0-devel-centos7
       # - 7.5-devel-centos7
       # - 7.0-devel-centos7
-      - 10.0-devel-centos6
-      # - 9.2-devel-centos6
-      # - 9.1-devel-centos6
-      # - 9.0-devel-centos6
-      # - 8.0-devel-centos6
-      # - 7.5-devel-centos6
