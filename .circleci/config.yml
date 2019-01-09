@@ -1,29 +1,24 @@
 version: 2
 
-.cargo_components: &cargo_components
-  name: Install cargo components
-  command: |
-    export PATH=/root/.cargo/bin:$PATH
-    rustup component add rustfmt
+aliases:
+  - &cargo_components
+    run:
+      name: Install cargo components
+      command: |
+        export PATH=/root/.cargo/bin:$PATH
+        rustup component add rustfmt
+  - &cargo_build
+    run:
+      name: Cargo build
+      command: |
+        export PATH=/root/.cargo/bin:$PATH
+        cargo build -vv
+  - &clang_version
+    run:
+      name: Show clang version
+      command: |
+        clang --version
 
-.cargo_build: &cargo_build
-  name: Cargo build
-  command: |
-    export PATH=/root/.cargo/bin:$PATH
-    cargo build -vv
-
-
-.clang_version: &clang_version
-  name: Cargo build
-  command: |
-    clang --version
-
-.rust_main: &rust_main
-  steps:
-    - run:
-        <<: *cargo_components
-        <<: *clang_version
-        <<: *cargo_build
 
 .job_apt_template: &job_apt
   steps:
@@ -34,8 +29,9 @@ version: 2
           apt update
           apt install -y curl clang-6.0
           curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - run:
-        <<: *rust_main
+    - *cargo_components
+    - *clang_version
+    - *cargo_build
 
 .job_yum_template: &job_yum
   steps:
@@ -45,8 +41,9 @@ version: 2
         command: |
           yum install -y curl clang clang-devel
           curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - run:
-        <<: *rust_main
+    - *cargo_components
+    - *clang_version
+    - *cargo_build
 
 jobs:
   latest:
@@ -121,30 +118,7 @@ jobs:
     <<: *job_yum
     docker:
       - image: nvidia/cuda:7.0-devel-centos7
-  10.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:10.0-devel-centos6
-  9.2-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.2-devel-centos6
-  9.1-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.1-devel-centos6
-  9.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:9.0-devel-centos6
-  8.0-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:8.0-devel-centos6
-  7.5-devel-centos6:
-    <<: *job_yum
-    docker:
-      - image: nvidia/cuda:7.5-devel-centos6
+
 
 workflows:
   version: 2
