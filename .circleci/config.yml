@@ -1,10 +1,29 @@
 version: 2
 
-.cargo: &cargo
+.cargo_components: &cargo_components
+  name: Install cargo components
+  command: |
+    export PATH=/root/.cargo/bin:$PATH
+    rustup component add rustfmt
+
+.cargo_build: &cargo_build
   name: Cargo build
   command: |
     export PATH=/root/.cargo/bin:$PATH
     cargo build -vv
+
+
+.clang_version: &clang_version
+  name: Cargo build
+  command: |
+    clang --version
+
+.rust_main: &rust_main
+  steps:
+    - run:
+        <<: *cargo_components
+        <<: *clang_version
+        <<: *cargo_build
 
 .job_apt_template: &job_apt
   steps:
@@ -16,7 +35,7 @@ version: 2
           apt install -y curl clang-6.0
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - run:
-        <<: *cargo
+        <<: *rust_main
 
 .job_yum_template: &job_yum
   steps:
@@ -27,7 +46,7 @@ version: 2
           yum install -y curl clang clang-devel
           curl https://sh.rustup.rs -sSf | sh -s -- -y
     - run:
-        <<: *cargo
+        <<: *rust_main
 
 jobs:
   latest:
