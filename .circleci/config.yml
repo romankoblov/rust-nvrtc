@@ -18,7 +18,7 @@ aliases:
       name: Cargo test
       command: |
         export PATH=/root/.cargo/bin:$PATH
-        cargo test -v
+        RUST_TEST_THREADS=1 cargo test -v
   - &cargo_fmt
     run:
       name: Cargo fmt
