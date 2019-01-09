@@ -1,0 +1,15 @@
+[package]
+name = "rust_nvrtc"
+version = "0.1.0"
+authors = ["Roman Koblov <penpen938@me.com>"]
+edition = "2018"
+build = "build.rs"
+license = "MIT"
+keywords = ["bindings", "cuda", "nvrtc", "gpu", "ptx"]
+categories = ["api-bindings", "concurrency"]
+repository = "https://github.com/romankoblov/rust-nvrtc"
+
+
+[build-dependencies]
+bindgen = "~0.43"
+
