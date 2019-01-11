@@ -36,7 +36,8 @@ macro_rules! read_string_len {
         unsafe {
             let read_fn: &Fn(&mut Vec<u8>) -> Result<(), error::NvrtcError>  = &$closure;
             read_fn(&mut vec)?;
-            vec.set_len($len);
+            // Ends with NULL byte
+            vec.set_len($len-1);
         }
         Ok(String::from_utf8(vec)?)
 
@@ -149,6 +150,7 @@ mod tests {
         let (maj, min) = version().unwrap();
         println!("driver version = {}.{}", maj, min);
     }
+
     #[test]
     fn nvrtc_basic() {
         let src = r#"
@@ -189,12 +191,15 @@ mod tests {
             .unwrap();
         program.add_expr("say_hello").unwrap();
         program.compile(&["-lineinfo"]).unwrap();
-        println!("Log ({}):\n{}",
-                 program.get_log_size().unwrap(),
-                 program.get_log().unwrap());
-        println!("PTX ({}):\n{}",
-                 program.get_ptx_size().unwrap(),
-                 program.get_ptx().unwrap());
+
+        let log = program.get_log().unwrap();
+        println!("Log ({}):\n{}", program.get_log_size().unwrap(), log);
+
+        let ptx = program.get_ptx().unwrap();
+        println!("PTX ({}):\n{}", program.get_ptx_size().unwrap(), ptx);
+
+        assert!(ptx.chars().last().unwrap()!='\0', "Last PTX byte is not NULL");
+        
         println!("New name:\n{}", program.get_name("say_hello").unwrap());
     }
 }
