@@ -5,7 +5,7 @@ use std::mem;
 use self::error::{NvrtcResult, ToResult};
 
 mod nvrtc;
-mod error;
+pub mod error;
 
 pub fn version() -> NvrtcResult<(usize, usize)> {
     let mut major: raw::c_int = 0;
