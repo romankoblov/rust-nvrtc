@@ -34,7 +34,7 @@ macro_rules! read_string_len {
     ($len:ident, $closure:expr) => {{
         let mut vec: Vec<u8> = Vec::with_capacity($len);
         unsafe {
-            let read_fn: &Fn(&mut Vec<u8>) -> Result<(), error::NvrtcError>  = &$closure;
+            let read_fn: &dyn Fn(&mut Vec<u8>) -> Result<(), error::NvrtcError>  = &$closure;
             read_fn(&mut vec)?;
             // Ends with NULL byte
             vec.set_len($len-1);
@@ -85,7 +85,7 @@ impl NvrtcProgram {
         Ok(size)
     }
 
-    pub fn get_ptx(&self) -> Result<String, Box<std::error::Error>> {
+    pub fn get_ptx(&self) -> Result<String, Box<dyn std::error::Error>> {
         let len = self.get_ptx_size()?;
         read_string_len!(len, |vec| {
             nvrtc::nvrtcGetPTX(self.inner, vec.as_mut_ptr() as *mut i8).to_result()
@@ -100,7 +100,7 @@ impl NvrtcProgram {
         Ok(size)
     }
 
-    pub fn get_log(&self) -> Result<String, Box<std::error::Error>> {
+    pub fn get_log(&self) -> Result<String, Box<dyn std::error::Error>> {
         let len = self.get_log_size()?;
         read_string_len!(len, |vec| {
             nvrtc::nvrtcGetProgramLog(self.inner, vec.as_mut_ptr() as *mut i8).to_result()
@@ -114,7 +114,7 @@ impl NvrtcProgram {
                 .to_result()
         }
     }
-    pub fn get_name(&self, expr: &str) -> Result<String, Box<std::error::Error>> {
+    pub fn get_name(&self, expr: &str) -> Result<String, Box<dyn std::error::Error>> {
         let expr_c = &CString::new(expr).unwrap();
         let mut ptr: *const raw::c_char = ptr::null();
         unsafe {

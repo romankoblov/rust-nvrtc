@@ -16,5 +16,4 @@ description = "Bindings for NVIDIA® CUDA™ NVRTC in Rust"
 circle-ci = { repository = "romankoblov/rust-nvrtc", branch = "master" }
 
 [build-dependencies]
-bindgen = "~0.43"
-
+bindgen = "0.63"
