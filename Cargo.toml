@@ -12,6 +12,9 @@ homepage = "https://github.com/romankoblov/rust-nvrtc"
 readme = "README.md"
 description = "Bindings for NVIDIA® CUDA™ NVRTC in Rust"
 
+[features]
+static = [] # Use static versions of NVRTC libraries
+
 [badges]
 circle-ci = { repository = "romankoblov/rust-nvrtc", branch = "master" }
 
