@@ -44,6 +44,21 @@ macro_rules! read_string_len {
     }}
 }
 
+macro_rules! read_vec_len {
+    ($len:ident, $closure:expr) => {{
+        let mut vec: Vec<u8> = Vec::with_capacity($len);
+        unsafe {
+            let read_fn: &dyn Fn(&mut Vec<u8>) -> Result<(), error::NvrtcError>  = &$closure;
+            read_fn(&mut vec)?;
+            // Ends with NULL byte
+            vec.set_len($len);
+        }
+        Ok(vec)
+
+    }}
+}
+
+
 impl NvrtcProgram {
     // headers done as tuple (source, name), so it will be more safe:
     // exact size of sources and names
@@ -91,6 +106,22 @@ impl NvrtcProgram {
             nvrtc::nvrtcGetPTX(self.inner, vec.as_mut_ptr() as *mut i8).to_result()
         })
     }
+
+    pub fn get_cubin_size(&self) -> NvrtcResult<usize> {
+        let mut size: usize = 0;
+        unsafe {
+            nvrtc::nvrtcGetCUBINSize(self.inner, &mut size).to_result()?;
+        }
+        Ok(size)
+    }
+
+    pub fn get_cubin(&self) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+        let len = self.get_cubin_size()?;
+        read_vec_len!(len, |vec| {
+            nvrtc::nvrtcGetCUBIN(self.inner, vec.as_mut_ptr() as *mut i8).to_result()
+        })
+    }
+
 
     pub fn get_log_size(&self) -> NvrtcResult<usize> {
         let mut size: usize = 0;

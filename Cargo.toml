@@ -1,11 +1,11 @@
 [package]
 name = "nvrtc"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Roman Koblov <penpen938@me.com>"]
 edition = "2018"
 build = "build.rs"
 license = "MIT"
-keywords = ["bindings", "cuda", "nvrtc", "gpu", "ptx"]
+keywords = ["bindings", "cuda", "nvrtc", "gpu", "ptx", "cubin"]
 categories = ["api-bindings", "concurrency"]
 repository = "https://github.com/romankoblov/rust-nvrtc"
 homepage = "https://github.com/romankoblov/rust-nvrtc"
